@@ -1,3 +1,12 @@
+/*
+ * @Author: tanghao 974958672@qq.com
+ * @Date: 2023-12-27 09:41:54
+ * @LastEditors: tanghao 974958672@qq.com
+ * @LastEditTime: 2023-12-27 10:03:39
+ * @FilePath: \real-world\tsconfig.build.json
+ * @Description: 
+ * 
+ */
 {
   "extends": "./tsconfig.json",
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
