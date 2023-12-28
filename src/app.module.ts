@@ -2,19 +2,28 @@
  * @Author: tanghao 974958672@qq.com
  * @Date: 2023-12-27 09:41:54
  * @LastEditors: tanghao 974958672@qq.com
- * @LastEditTime: 2023-12-27 11:01:42
+ * @LastEditTime: 2023-12-28 09:59:53
  * @FilePath: \real-world\src\app.module.ts
  * @Description:
  *
  */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import ormConfig from '../ormconfig';
+import { UserModule } from './user/user.module';
+import { typeOrmConfig } from './config/typeorm.config';
 @Module({
-  imports: [TypeOrmModule.forRoot(ormConfig as TypeOrmModuleOptions)],
+  imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: typeOrmConfig,
+    }),
+    UserModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
