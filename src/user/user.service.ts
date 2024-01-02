@@ -2,18 +2,19 @@
  * @Author: tanghao 974958672@qq.com
  * @Date: 2023-12-27 15:11:17
  * @LastEditors: tanghao 974958672@qq.com
- * @LastEditTime: 2023-12-28 10:25:49
+ * @LastEditTime: 2024-01-02 09:55:05
  * @FilePath: \real-world\src\user\user.service.ts
  * @Description:
  *
  */
+import * as argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { Injectable, HttpStatus, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { validate } from 'class-validator';
-import { CreateUserDto } from './dto/createUser.dto';
+import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
 import { UserRO } from './user.interface';
 import { UserEntity } from './user.entity';
 import { SECRET } from '../config';
@@ -58,6 +59,53 @@ export class UserService {
       const savedUser = await this.userRepository.save(newUser);
       return this.buildUserRO(savedUser);
     }
+  }
+
+  async findByEmail(email: string) {
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) {
+      const errors = { User: 'not found' };
+      throw new HttpException({ errors }, 401);
+    }
+    return this.buildUserRO(user);
+  }
+
+  async findById(id: number): Promise<UserRO> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      const errors = { User: ' not found' };
+      throw new HttpException({ errors }, 401);
+    }
+
+    return this.buildUserRO(user);
+  }
+
+  async findOne({ email, password }: LoginUserDto) {
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) return null;
+
+    const verifyAns = await argon2.verify(user.password, password);
+    console.log(
+      '🚀 ~ file: user.service.ts:89 ~ UserService ~ findOne ~ verifyAns:',
+      verifyAns,
+    );
+    if (verifyAns) {
+      return user;
+    }
+    return null;
+  }
+
+  async update(id: number, dto: UpdateUserDto): Promise<UserEntity> {
+    const toUpdate = await this.userRepository.findOneBy({ id });
+    delete toUpdate.password;
+    delete toUpdate.favorites;
+    const updated = Object.assign(toUpdate, dto);
+    return await this.userRepository.save(updated);
+  }
+
+  async delete(email: string): Promise<DeleteResult> {
+    return this.userRepository.delete({ email });
   }
 
   public generateJWT(user) {

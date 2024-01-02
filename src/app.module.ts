@@ -14,6 +14,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { typeOrmConfig } from './config/typeorm.config';
+import { TagController } from './tag/tag.controller';
+import { TagModule } from './tag/tag.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -23,8 +25,9 @@ import { typeOrmConfig } from './config/typeorm.config';
       useFactory: typeOrmConfig,
     }),
     UserModule,
+    TagModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, TagController],
   providers: [AppService],
 })
 export class AppModule {}
