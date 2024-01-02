@@ -1,24 +1,25 @@
 /*
  * @Author: tanghao 974958672@qq.com
- * @Date: 2023-12-27 11:38:06
+ * @Date: 2024-01-02 10:48:50
  * @LastEditors: tanghao 974958672@qq.com
- * @LastEditTime: 2023-12-27 13:54:50
+ * @LastEditTime: 2024-01-02 10:51:44
  * @FilePath: \real-world\src\article\article.entity.ts
- * @Description:文章实体
+ * @Description:
  *
  */
 import {
   Entity,
-  Column,
   PrimaryGeneratedColumn,
-  BeforeUpdate,
+  Column,
   ManyToOne,
   OneToMany,
   JoinColumn,
+  BeforeUpdate,
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import { Comment } from './comment.entity';
-@Entity('articles')
+
+@Entity('article')
 export class ArticleEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -42,16 +43,17 @@ export class ArticleEntity {
   updated: Date;
 
   @BeforeUpdate()
-  updateTimeStamp() {
+  updateTimestamp() {
     this.updated = new Date();
   }
 
   @Column('simple-array')
   tagList: string[];
-  @ManyToOne(() => UserEntity, (user) => user.articles)
+
+  @ManyToOne((type) => UserEntity, (user) => user.articles)
   author: UserEntity;
 
-  @OneToMany(() => Comment, (comment) => comment.article, { eager: true })
+  @OneToMany((type) => Comment, (comment) => comment.article, { eager: true })
   @JoinColumn()
   comments: Comment[];
 

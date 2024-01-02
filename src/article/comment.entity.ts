@@ -1,8 +1,8 @@
 /*
  * @Author: tanghao 974958672@qq.com
- * @Date: 2023-12-27 13:50:58
+ * @Date: 2024-01-02 10:48:50
  * @LastEditors: tanghao 974958672@qq.com
- * @LastEditTime: 2023-12-27 13:53:47
+ * @LastEditTime: 2024-01-02 10:52:25
  * @FilePath: \real-world\src\article\comment.entity.ts
  * @Description:
  *
@@ -18,6 +18,6 @@ export class Comment {
   @Column()
   body: string;
 
-  @ManyToOne(() => ArticleEntity, (article) => article.comments)
+  @ManyToOne((type) => ArticleEntity, (article) => article.comments)
   article: ArticleEntity;
 }
