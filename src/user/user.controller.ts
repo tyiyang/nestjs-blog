@@ -3,7 +3,7 @@ import { HttpException } from '@nestjs/common/exceptions/http.exception';
  * @Author: tanghao 974958672@qq.com
  * @Date: 2023-12-27 14:13:55
  * @LastEditors: tanghao 974958672@qq.com
- * @LastEditTime: 2024-01-02 09:59:15
+ * @LastEditTime: 2024-01-02 15:45:36
  * @FilePath: \real-world\src\user\user.controller.ts
  * @Description:
  *
@@ -17,10 +17,13 @@ import {
   Controller,
   Body,
 } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto, LoginUserDto } from './dto';
 import { User } from './user.decorator';
 import { UserRO } from './user.interface';
+@ApiBearerAuth()
+@ApiTags('user')
 @Controller()
 export class UserController {
   constructor(private readonly userService: UserService) {}
